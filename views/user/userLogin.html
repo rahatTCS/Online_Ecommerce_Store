@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>login</title>
+
+        <link rel="stylesheet" type="text/css"  href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css"  href="stylesheets/styleUser.css">
+        <link rel="stylesheet" type="text/css"  href="stylesheets/newheader.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJW4jsPlNKgv6jFm3B5Edp5ywgdqLWdmc&sensor=false async defer"></script>
+		<script>
+		loginModule = angular.module('login',[]);
+		loginModule.controller('loginController',function($scope,$http){
+			$scope.loginpost = function(){
+				var url = '/login';
+				var config = {
+						headers : {
+								'Accept': 'application/json'
+								}
+						}
+				var data = {
+					username: $scope.username,
+					password: $scope.password,
+				}
+				$http.post(url,JSON.stringify(data), config).then(function (response){
+					$scope.postMsg = response.data;
+					if(!$scope.postMsg.Failed){
+						sessionStorage.setItem('userid', $scope.postMsg.user._id);
+						location.href = '/profile';
+					}
+				}, function (response){
+					$scope.postMsg = { 'Failed': true, 'message': "Error Status: " +  response.statusText};
+				});
+			}
+		})
+		
+		loginModule.controller('searchController',function($scope,$http){
+			$scope.searchitems= function(key){
+				sessionStorage.setItem('keyword',$scope.search);
+				location.href = '/search';
+			}
+		})
+</script>
+    </head>
+    <body ng-app = "login">
+        <div class="banner-bg banner-sec">	
+	  		<div class="container">
+				<div class="header">							 
+					<div class="top-nav">	
+						<ul class="nav">
+							<a class="shop" href="/login">LOG IN/SIGN UP</a>
+							<a class="shop" href="/products">PRODUCT</a>
+							<a class="shop" href="/profile">My ACCOUNT</a>
+							<a class="shop" href="/cart"><img src="images/cart.png" alt=""/></a>
+						</ul>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+	  		</div> 				 
+		</div>
+		<div id = "Login">
+			<div class="container">
+            <div class = "col-md-6 login-left" ng-controller = "loginController">
+                <div class="section-title text-center center">
+                    <h2>REGISTERED CUSTOMERS</h2>
+                </div>
+                <form class="form-horizontal" ng-submit = "loginpost()">
+                    <div>
+                        <span class="col-sm-3 control-label">User Name<label>*</label></span>
+                        <div class="col-sm-9">
+                            <input ng-model="username" id="username" class="form-control" type="text" required name="username" >
+                        </div>
+                    </div>
+                    <div>
+                        <span class="col-sm-3 control-label">Password<label>*</label></span>
+                        <div class="col-sm-9">
+                            <input ng-model="password" id="pwd" class="form-control" type="password" required name="password">
+                        </div>
+                    </div>
+					<div>
+						<div class="col-sm-9 col-sm-offset-3 text-center" ng-show = "postMsg.Failed">
+							<div class="alert alert-danger">{{postMsg.message}}</div>
+						</div>
+					</div>
+                    <div>
+                        <div class="col-sm-9, col-sm-offset-3">
+                            <button type="reset" value="Reset" class="btn btn-default">Reset</button>
+                            <button type="submit" value="Login" class="btn btn-default">Login</button>
+                            <a href="/managerLogin"><button type="button" value="Login" class="btn btn-default">Login As Admin</button></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 login-right">
+                <div class="section-title">
+                    <h2>NEW CUSTOMERS</h2>
+                    <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p>
+                   <a href="/register"> <button class="btn acount-btn" >Create an Account</button></a>
+                </div>
+            </div>	
+            <div class="clearfix"> </div>
+			</div>
+        </div>
+			<div class="footer_bottom">
+				<div class="copy">
+					<p>Copyright © 2020</p>
+				</div>
+    </body>
+</html>

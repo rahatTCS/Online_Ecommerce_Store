@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Products</title>
+        <link rel="stylesheet" type="text/css"  href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css"  href="stylesheets/styleUser.css">
+        <link rel="stylesheet" type="text/css"  href="stylesheets/newheader.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJW4jsPlNKgv6jFm3B5Edp5ywgdqLWdmc&sensor=false async defer"></script>
+	</head>
+    <script>
+		productModule = angular.module('product',[]);
+		productModule.controller('productController',function($scope,$http){
+				var url = '/ManageProduct';
+				$http.get(url).then(function (response){
+					$scope.postMsg= response.data;
+				
+						$scope.products = $scope.postMsg;
+				})
+			
+				$scope.seedetail = function(productID){
+					var url = '/ManageProduct/' + productID;
+					$http.get(url).then(function (response){
+						$scope.postMsg= response.data;
+							sessionStorage.setItem('product',JSON.stringify(response.data));
+							location.href = '/single';
+						
+					}, function (response){
+						$scope.postMsg = { 'Failed': true, 'message': "Error Status: " +  response.statusText};
+					});
+					
+				}
+		}) 
+		
+		productModule.controller('searchController',function($scope,$http){
+			$scope.searchitems= function(key){
+				sessionStorage.setItem('keyword',$scope.search);
+				location.href = '/search';
+			}
+		})
+	</script>
+	
+	<body ng-app = "product">
+        <div class="banner-bg banner-sec">	
+	  <div class="container">
+			 <div class="header">
+			       <div class="logo">
+						 <a href="/"><img src="images/logo_1.png" alt=""/></a>
+				   </div>							 
+				  <div class="top-nav">	
+					   <ul class="nav">
+					   		<a class="shop" href="/login">LOG IN/SIGN UP</a>
+							<a class="shop" href="/products">PRODUCT</a>
+						 	<a class="shop" href="/profile">My ACCOUNT</a>
+						  	<a class="shop" href="/cart"><img src="images/cart.png" alt=""/></a>
+					  </ul>
+				 </div>
+				 <div class="clearfix"></div>
+			 </div>
+	  </div> 				 
+</div>
+	<div id="products">
+		<div class="container" ng-controller = "productController">
+			<div class="col-md-9 fashions">
+				<div class="title">
+					<h3>Products</h3>
+				</div>
+				<div class="fashion-section">
+					<div class="fashion-holder" ng-show = "!postMsg.Failed" >
+						<div class="col-md-3 fashion-grid" ng-repeat = "product in products | orderBy:orderby | filter:query">
+							 <a href="/single"><img ng-src="{{product.img}}" height="280" width="180" alt="{{product.productName}}"></a>
+								 <div class="product">
+									 <h3>{{product.productName}}</h3>
+									 <p>$ {{product.price}} <span></span></p>
+								 </div>
+							 </a>
+							 <div class="fashion-view" ng-show = "product.inventory_amount != 0"><span></span>
+								<div class="clearfix"></div>
+								<h4><a ng-click="seedetail(product._id)">Quick View</a></h4>
+							 </div>
+							 <div class="fashion-view" ng-show = "product.inventory_amount == 0"><span></span>
+								<div class="clearfix"></div>
+								<h4 class="sold-out"><a ng-click="seedetail(product._id)"><del>Sold Out</del></a></h4>
+							 </div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+					 <div class="orderby">
+					 </div>
+				</div>
+			</div>
+			<div class="clearfix"> </div>
+			<div class="container noresult" ng-show = "postMsg.Failed">
+				<h3>{{postMsg.message}}</h3>
+				<p>click <a href = "/products">here</a> go back to all the products<p>
+			</div>
+		</div>
+	</div>
+			<div class="footer_bottom">
+				<div class="copy">
+					<p>Copyright © 2020</p>
+				</div>
+    </body>
+</html>

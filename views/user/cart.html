@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Cart</title>
+        <link rel="stylesheet" type="text/css"  href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css"  href="stylesheets/styleUser.css">
+        <link rel="stylesheet" type="text/css"  href="stylesheets/newheader.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJW4jsPlNKgv6jFm3B5Edp5ywgdqLWdmc&sensor=false async defer"></script>
+		<script type="text/javascript" src="javascripts/jquery-1.11.1.min.js"></script>
+	</head>
+	<script>
+		cartModule = angular.module('cart',[]);
+		cartModule.controller('cartController',function($scope,$http){
+			if (!sessionStorage.getItem('userid')){
+				alert("User session expired, Please login");
+				location.href = '/login';
+			}else{	
+				var url = '/cartctrl/findbyuser/'+sessionStorage.getItem('userid');
+				$http.get(url).then(function (response){
+					$scope.postMsg= response.data;
+					if(!$scope.postMsg.Failed){
+						$scope.cart = $scope.postMsg;
+					}
+				})
+			}
+			$scope.getItemsPriceSum = function(){
+				var sum = 0;
+				angular.forEach($scope.cart, function(each){
+					sum += each.cPrice * each.cQuantity;
+				});
+				return sum.toFixed(2);
+			};
+			$scope.getDelieverFee = function(){
+				var sum = 0;
+				angular.forEach($scope.cart, function(each){
+					sum += 5.00 ;
+				});
+				return sum.toFixed(2);
+			};
+			$scope.removeitem= function(id){
+				if(confirm("You really want to delete this item?")){
+					var url = '/cartctrl/' + id;
+					$http.delete(url).then(function (response){
+						$scope.postMsg= response.data;
+						if(!$scope.postMsg.Failed){
+							url = '/cartctrl';
+							$http.get(url).then(function (response){
+								$scope.postMsg= response.data;
+								if(!$scope.postMsg.Failed){
+									$scope.cart = $scope.postMsg
+								}
+							})
+						}
+					}, function (response){
+						$scope.postMsg = { 'Failed': true, 'message': "Error Status: " +  response.statusText};
+					});
+				}
+			}
+			$scope.editinventory= function(productID, Quantity){
+				var url = '/ManageProduct/editinventory'
+				var config = {
+						headers : {
+								'Accept': 'application/json'
+								}
+				}
+				var data = {
+					product_ID: productID,
+					quantity: Quantity,
+				}
+				$http.post(url,JSON.stringify(data), config).then(function (response){
+					$scope.postMsg= response.data;
+				})
+			}
+			$scope.clearcart= function(){
+				url = '/ManageTransaction/newtransaction';
+				
+				var config = {
+						headers : {
+								'Accept': 'application/json'
+								}
+				}
+				
+				angular.forEach($scope.cart, function(each){
+					var data = {
+						user_ID: sessionStorage.getItem('userid'),
+						product_ID: each.cId,
+						price: each.cPrice,
+						quantity:each.cQuantity
+					}
+					
+					$http.post(url,JSON.stringify(data), config).then(function (response){
+						$scope.postMsg= response.data;
+						alert('Your Order Successfully Placed');
+						if(!$scope.postMsg.Failed){
+							var url = '/cartctrl/' + each._id;
+							$http.delete(url).then(function (response){
+								$scope.postMsg= response.data;
+								if(!$scope.postMsg.Failed){
+									$scope.editinventory(each.cId, each.cQuantity);
+									location.href = '/products';
+								}
+							})
+						}
+					})
+				});
+			}
+		})
+
+		cartModule.controller('searchController',function($scope,$http){
+			$scope.searchitems= function(key){
+				sessionStorage.setItem('keyword',$scope.search);
+				location.href = '/search';
+			}
+			
+     })		
+	</script>
+	
+	<body ng-app = "cart">
+        <div class="banner-bg banner-sec">	
+	  		<div class="container">
+				<div class="header">						 
+					<div class="top-nav">	
+						<ul class="nav">
+							<a class="shop" href="/login">LOG IN/SIGN UP</a>
+							<a class="shop" href="/products">PRODUCT</a>
+							<a class="shop" href="/profile">My ACCOUNT</a>
+							<a class="shop" href="/cart"><img src="images/cart.png" alt=""/></a>
+						</ul>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+	  		</div> 				 
+		</div>
+	<div id="cart">
+	<div class="container" ng-controller = "cartController">
+		<form ng-show = "cart.length != 0">
+		<div class="col-md-9 cart-items">
+			<div class="title">
+				<h3>My Shopping Cart</h3>
+			</div>
+			 <div class="cart-header" ng-repeat = "item in cart">
+				 <div class="remove" ng-click="removeitem(item._id)"> </div>
+				 <div class="cart-sec simpleCart_shelfItem">
+						<div class="cart-item cyc">
+							 <img ng-src="{{item.cImgSrc}}" class="img-responsive" alt=""/>
+						</div>
+					   <div class="cart-item-info">
+						<h3><a href="#">{{item.cName}}</a><span>No: {{$index+1}}</span></h3>
+						<ul class="qty">
+							<li><p>Price : ${{item.cPrice}}</p></li>
+							<li><p>Qty : {{item.cQuantity}}</p></li>
+						</ul>
+						<div class="delivery">
+							 <p>Service Charges : $5.00</p>
+							 <span>Delivered in 2-3 bussiness days</span>
+							 <div class="clearfix"></div>
+				        </div>	
+					   </div>
+					   <div class="clearfix"></div>
+											
+				  </div>
+			 </div>	
+		 </div>
+		 <div class="col-md-3 cart-total">
+			 <a class="continue" href="/products">Continue to basket</a>
+			 <div class="price-details">
+				 <h3>Price Details</h3>
+				 <span>Total</span>
+				 <span class="total1">{{getItemsPriceSum()}}</span>
+				 <span>Discount</span>
+				 <span class="total1">---</span>
+				 <span>Delivery Charges</span>
+				 <span class="total1">{{getDelieverFee()}}</span>
+				 <div class="clearfix"></div>				 
+			 </div>	
+			 <ul class="total_price">
+			   <li class="last_price"> <h4>TOTAL</h4></li>	
+			   <li class="last_price">$<span ng-bind = "getItemsPriceSum()*1+getDelieverFee()*1"></span></li>
+			   <div class="clearfix"> </div>
+			 </ul>
+			 <div class="clearfix"></div>
+			 <a class="order" ng-click = "clearcart()">Place Order</a>
+			</div>
+		</form>
+		<div class="clearfix"> </div>
+		<div   class="container noresult" ng-show = "cart.length == 0" style="color: black;">
+			<h3>Your shopping cart is empty</h3>
+			<p>click <a href = "/products">here</a> go back find more products<p>
+		</div>
+	 </div>
+</div>
+			<div class="footer_bottom">
+				<div class="copy">
+					<p>Copyright © 2020</p>
+				</div>
+    </body>
+</html>

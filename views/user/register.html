@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Register</title>
+        <link rel="stylesheet" type="text/css"  href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css"  href="stylesheets/styleUser.css">
+        <link rel="stylesheet" type="text/css"  href="stylesheets/newheader.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJW4jsPlNKgv6jFm3B5Edp5ywgdqLWdmc&sensor=false async defer"></script>
+    	<script>
+		registerModule = angular.module('register',[]);
+		registerModule.controller('registerController',function($scope,$http){
+			$scope.registerpost = function(){
+				if($scope.password1 != $scope.password2){
+					$scope.postMsg = { 'Failed': true, 'message': 'two password doesnot match!' };
+				}else{
+					var url = '/register';
+					var config = {
+						headers : {
+								'Accept': 'application/json'
+								}
+							}
+					
+						var data = {
+							username: $scope.username,
+							password: $scope.password1,
+							name: $scope.name,
+							address:$scope.address,
+							age:$scope.age,
+							income:$scope.income,
+							gender:$scope.gender,
+							marriage_status:$scope.marriage_status,
+							email:$scope.email,
+							tel:$scope.tel
+						}
+					
+					$http.post(url,JSON.stringify(data), config).then(function (response){
+						$scope.postMsg= response.data;
+						if(!$scope.postMsg.Failed){
+							location.href = '/login';
+						}
+					}, function (response){
+						$scope.postMsg = { 'Failed': true, 'message': "Error Status: " +  response.statusText};
+					});
+				}
+			}
+		})
+		
+			registerModule.controller('searchController',function($scope,$http){
+				$scope.searchitems= function(key){
+					sessionStorage.setItem('keyword',$scope.search);
+					location.href = '/search';
+				}
+			})
+		</script>
+	</head>
+    <body ng-app = "register">
+        <div class="banner-bg banner-sec">	
+	  		<div class="container">
+				<div class="header">
+				    <div class="logo">
+						<a href="/"><img src="images/logo_1.png" alt=""/></a>
+					</div>							 
+					<div class="top-nav">	
+						<ul class="nav">
+							<a class="shop" href="/login">LOG IN/SIGN UP</a>
+							<a class="shop" href="/products">PRODUCT</a>
+							<a class="shop" href="/profile">My ACCOUNT</a>
+							<a class="shop" href="/cart"><img src="images/cart.png" alt=""/></a>
+						</ul>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+	  		</div> 				 
+		</div>
+        <div id = "register" class = "container" ng-app = "register">
+            <div ng-controller = "registerController">
+                    <form class="form-horizontal" name="registerform" ng-submit = "registerpost()">
+                        <div class="register-top-grid">
+							<h3>PERSONAL INFORMATION</h3>
+							<div>
+								<span>Name<label>*</label></span>
+                                <input ng-model="name" class="form-control" type="text" required name="name" >
+							</div>
+							<div>
+								<span>Address<label>*</label></span>
+                                <input ng-model="address" class="form-control" type="text" required name="address" >
+							</div>
+							<div>
+								<span>Email Address</span>
+                                <input ng-model="email" class="form-control" type="email" name="email">
+							</div>
+							<div>
+								<span>Telephone Number</span>
+                                <input ng-model="tel" class="form-control" type="text" name="tel" placeholder="xxx-xxx-xxxx" ng-pattern="/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/">
+							</div>
+							<div class="alert alert-danger col-md-12 text-center" ng-show = "registerform.email.$dirty && registerform.email.$invalid">
+								<span ng-show="registerform.email.$error.email">Illegal email</span>
+							</div>
+							<div class="alert alert-danger col-md-12 text-center" ng-show = "registerform.tel.$dirty && registerform.tel.$invalid">
+								<span ng-show="registerform.tel.$error.pattern">Illegal phone number</span>
+							</div>
+						</div>
+						<div class="clearfix"> </div>
+						<div class="register-bottom-grid">
+							<h3>LOGIN INFORMATION</h3>
+							<div>
+								<span>User Name<label>*</label></span>
+                                <input ng-model="username" class="form-control" type="text" required name="username" >
+							</div>
+							<div>
+								<span>Password<label>*</label></span>
+                                <input ng-model="password1" class="form-control" type="password" required name="password1" >
+							</div>
+							<div>
+								<span>Confirm Password<label>*</label></span>
+                                <input ng-model="password2" class="form-control" type="password" required name="password2" >
+							</div>
+							<div>
+								<div class="register-but">
+									<button type="reset" value="Reset" class="btn btn-default">Reset</button>
+									<button type="submit" value="Submit" class="btn btn-default" ng-disabled="registerform.email.$error.email || registerform.tel.$error.pattern ">Submit</button>
+								</div>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+                    </form>
+					<div class="alert alert-danger col-md-12 text-center" ng-show = "postMsg.Failed">{{postMsg.message}}</div>					
+					<div class="clearfix"> </div>
+            </div>
+        </div>
+			<div class="footer_bottom">
+				<div class="copy">
+					<p>Copyright © 2020</p>
+				</div>
+    </body>
+</html>

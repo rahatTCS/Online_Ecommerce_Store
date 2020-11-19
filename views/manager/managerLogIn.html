@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login</title>
+    <link rel="stylesheet" type="text/css"  href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css"  href="stylesheets/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJW4jsPlNKgv6jFm3B5Edp5ywgdqLWdmc&sensor=false async defer"></script>
+	<script type="text/javascript">
+		loginModule = angular.module("login", []);
+		loginModule.controller('loginController', function($scope, $http) {
+			
+			$scope.loginpost = function() {
+				
+				var url = '/ManagerAccount/login';
+				var config = {
+						headers : {
+							'Accept': 'application/json'
+						}
+				};
+				var data = {
+					name: $scope.manager_name,
+					password: $scope.manager_password
+				};
+				$http.post(url,JSON.stringify(data), config).then(function (response){
+					$scope.postMsg = response.data;
+					if(!$scope.postMsg.Failed){
+						$scope.manager = $scope.postMsg.Manager;
+						sessionStorage.setItem('managername', $scope.manager.name);
+						sessionStorage.setItem('managerid', $scope.manager._id);
+						location.href = '/managerHome';
+					}
+				}, function (response){
+					$scope.postMsg = { 'Failed': true, 'message': "Error Status: " +  response.statusText};
+				});
+			}
+		});
+	</script>
+</head>
+<body>
+        <div id="nav" class="container-fluid">
+            <nav class="navbar navbar-custom">
+                <div class="container">
+					<div class="col-md-9">
+						<div class="navbar-header col-md-2 logo">
+							<h1><a class="navbar-brand" ng-click="clearSession()" href="/"><span style="color: navy;">Admin</span></a></h1>
+						</div>
+						<div>
+							<ul class="col-md-7 nav navbar-nav menu" ng-controller="homeController">
+								<li class="active grid nav-item nav-link"><a class="color1">Admin LogIn Page</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+            </nav>
+			<div class="clearfix"></div>
+        </div>
+    <div  id ="box" class="container" ng-app="login">
+    	<div class="col-md-3"></div>
+    	<div class="col-md-6" ng-controller="loginController">
+    		<div class="text-center">
+    			<h2>ADMIN LOGIN</h2>
+    			<p>Please input your name and password to login to your admin account</p>
+    		</div>
+    		<form class="form-horizontal" ng-submit="loginpost()">
+    		
+
+                <div class="form-group">
+	                <label for="manager_name">Name</label>
+	                <input ng-model="manager_name" id="manager_name" class="form-control" type="text" name="manager_name">
+	            </div>
+                
+         
+                <div class="form-group">
+	                <label for="manager_password">Password</label>
+	                <input ng-model="manager_password" id="manager_password" class="form-control" type="password" name="manager_password">
+	            </div>
+
+                <div>
+					<div class="text-center" ng-show = "postMsg.Failed">
+						<div class="alert alert-danger">{{postMsg.message}}</div>
+					</div>
+				</div>
+                
+                <div>
+                    <div class="text-center">
+                        <button type="reset" value="Reset" class="btn btn-success">Reset</button>
+                        <button type="submit" value="Login" class="btn btn-success">Login</button>
+                    </div>
+                </div>
+    		</form>
+    	</div>
+    </div>
+	<div class="footer">
+			<div class="footer_bottom">
+				<div class="copy">
+					<p>Copyright © 2020</p>
+				</div>
+			</div>
+	</div>
+</body>
+</html>

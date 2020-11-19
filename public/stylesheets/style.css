@@ -1,0 +1,296 @@
+
+.footer {
+  border-top: 1px solid rgb(236, 236, 236);
+  padding-top: 10em;
+  background-color: skyblue;
+ 
+}
+
+
+.footer_top {
+  margin-bottom: 2em;
+   background-color: pink; 
+}
+
+.footer_top h3{
+	color: #515151;
+  	font-size: 1.3em;
+  	font-weight: 600;
+  	margin-bottom:1.5em;
+}
+.footer_top h4{
+	font-size:1em;
+	font-weight:600;
+}
+.footer_top h4 a{
+	color:#666;
+}
+.footer_top p{
+	color:#999;
+	font-size:0.85em;
+	margin-bottom:1.5em;
+}
+
+ul.footer_social {
+  padding: 0;
+  list-style: none;
+  margin:0;
+}
+ul.footer_social li {
+  display: inline-block;
+  margin-right: 10px;
+}
+ul.footer_social li a i {
+  width: 25px;
+  height: 25px;
+  display: block;
+  background: url(../images/img_sprite.png)no-repeat;
+}
+ul.footer_social li a i.fb {
+	background-position:-3px -13px;
+}
+ul.footer_social li a i.tw {
+  	background-position:-26px -14px;
+}
+ul.footer_social li a i.google{
+  	background-position:-55px -14px;
+}
+ul.footer_social li a i.instagram{
+  	background-position:-84px -14px;
+}
+ul.footer_social li a i:hover{
+	opacity:0.5;
+}
+
+.address p {
+  color: #999;
+  font-size: 0.85em;
+  line-height: 1.8em;
+  margin: 0 0 16px;
+  font-style: normal;
+}
+.address dd {
+  color: #96a6a7;
+  font-size: 0.85em;
+  line-height: 1.8em;
+}
+
+ul.list {
+  padding: 0 24% 0 0;
+  margin: 0;
+  list-style: none;
+  float: left;
+}
+ul.list li a{
+	color:#999;
+	font-size:0.8125em;
+	line-height:2.5em;
+}
+
+.footer_bottom{
+	  border-top: 1px solid rgb(236, 236, 236);
+	  padding:2em 0;
+}
+
+.copy{
+	text-align:center;
+}
+.copy p{
+	color:#999;
+	font-size:0.85em;
+}
+
+
+#nav{
+  border-bottom: 1px solid #EFEFEF;
+  background-color: skyblue;
+
+}
+.navbar {
+  margin-top: 20px;
+}
+.navbar-brand {
+    font-size: 24px;
+}
+
+#box
+{
+  background-color: pink;
+}
+.logo {
+  border-right: 1px solid #E0E0E0;
+  padding-left:0;
+}
+.logo h1{
+    text-transform: uppercase;
+      font-size: 1.5em;
+   font-weight: 800;
+     margin: 5px 0 0 0;
+}
+.logo h1 a span{
+  color:#f54d56;
+}
+.logo h1 a{
+  color:#333;
+}
+.logo h1 a:hover{
+  text-decoration:none;
+}
+.menu{
+  margin-bottom:0px;
+  padding:8px 15px;
+  width:80%;
+  list-style:none;
+  display:inline-block;
+  font-size:0.8125em
+}
+
+.menu li{margin-bottom:-5px;display:inline}
+.menu>li>a{
+  float:left;
+  padding:8px 15px;
+  text-decoration:none;
+  text-transform:capitalize;
+  font-size:1.1em; 
+  -webkit-transition: all 0.3s ease-in-out;
+  text-transform:uppercase;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.menu>li.active>a{color:#00405d;}
+.menu li>a{color:#BABABA;}
+
+
+.menu li a.color1:hover{
+  background:navy;
+   color: #ffffff;
+  cursor: pointer;
+}
+.menu li a.color2:hover{
+  background:navy;
+  color: #ffffff;
+}
+.menu li a.color3:hover{
+  background:navy;
+  color: #ffffff;
+}
+.menu li a.color4:hover{
+  background:#D61F85;
+  color: #ffffff;
+}
+.menu li a.color5:hover{
+  background:#F89F1B;
+  color: #ffffff;
+}
+.menu li a.color6:hover{
+  background:#00677C;
+  color: #ffffff;
+}
+.menu li a.color7:hover{
+  background:#D5331D;
+  color: #ffffff;
+}
+.menu li a.color8:hover{
+  background:#00405d;
+  color: #ffffff;
+}
+.menu li a.color9:hover{
+  background:#9CB43A;
+  color: #ffffff;
+}
+.menu li a.color10:hover{
+  background:#26BC85;
+  color: #ffffff;
+} 
+
+  
+ 
+.search {
+  background: #fff;
+  border: 1px solid #ddd;
+  position: relative;
+  float: left;
+}
+
+
+.search input[type="text"] {
+  border: none;
+  outline: none;
+  background: none;
+  font-size:0.85em;
+    color:#999;
+  width:215px;
+  padding:7px;
+  -webkit-apperance:none;
+  margin:0;
+  -webkit-transition: all 0.5s ease-out;
+  -moz-transition: all 0.5s ease-out;
+  -ms-transition: all 0.5s ease-out;
+  -o-transition: all 0.5s ease-out;
+}
+.search input[type="text"]:focus{
+  width:215px;
+}
+.search input[type="submit"] {
+    border: none;
+    text-indent: -9999px;
+    outline: none;
+    cursor: pointer;
+    background: url("../images/search1.png") no-repeat 2px 6px;
+    width: 30px;
+    height: 37px;
+    padding: 8px;
+} 
+.search input[type="submit"]:active {
+  position:relative;
+}
+
+.col-md-6
+{
+  background-color: pink;
+}
+
+.panel-heading
+{
+  color: black;
+  font-weight: bold;
+}
+
+#box
+{
+  background-color: pink;
+}
+
+#box1
+{
+  background-color: pink;
+}
+
+#box2
+{
+  background-color: pink;
+}
+
+.list-group-item
+{
+  color: black;
+  font-weight: 200;
+}
+
+#users
+{
+  background-color: pink;
+}
+
+#place
+{
+  background-color: pink;
+}
+
+#transaction
+{
+  background-color: pink;
+}
+
